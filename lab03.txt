@@ -1,0 +1,73 @@
+zadanie 1.1
+CREATE TABLE postaci (id_postaci int PRIMARY KEY AUTO_INCREMENT,nazwa varchar(40),rodzaj enum('wiking','ptak','kobieta'),data_ur date,wiek int unsigned);
+
+zad 1.2
+INSERT INTO postaci (nazwa,rodzaj,data_ur,wiek) values 
+('Bjorn','wiking','1970-01-03',51),
+('Drozd','ptak','1990-01-03',31),
+('Tesciowa','kobieta','1950-01-03',71);
+
+zad 1.3
+UPDATE postaci SET wiek=88 where nazwa='Tesciowa';
+
+zad 2.1
+CREATE TABLE walizka(id_walizki int PRIMARY KEY AUTO_INCREMENT,pojemnosc int unsigned,kolor enum('rozowy','czerwony','teczowy','zolty'),id_wlasciciela int, FOREIGN KEY(id_wlasciciela) REFERENCES postaci(id_postaci) ON DELETE CASCADE);
+
+zad 2.2
+ALTER TABLE walizka ALTER kolor SET DEFAULT 'rozowy';
+
+zad 2.3
+INSERT INTO walizka (pojemnosc,kolor,id_wlasciciela) values 
+(15,'czerwony',1),
+(40,default,3);
+
+zad 3.1
+CREATE TABLE izba (adres_budynku int,nazwa_izby varchar(40), metraz int unsigned, wlasciciel int, PRIMARY KEY(adres_budynku,nazwa_izby), FOREIGN KEY(wlasciciel) REFERENCES postaci(id_postaci) ON DELETE SET NULL);
+
+zad 3.2
+ALTER TABLE izba ADD COLUMN kolor_izby enum('czarny','zolty','zielony') DEFAULT 'czarny' AFTER metraz;
+
+zad 3.3
+INSERT INTO izba VALUES (12,'spizarnia',12,default,1);
+
+zad 4.1
+CREATE TABLE przetowry (id_przetwory int PRIMARY KEY AUTO_INCREMENT, rok_produkcji INT(4) DEFAULT '1654', id_wykonawcy int, zawartosc varchar(30), dodatek varchar(30) DEFAULT 'papryczka_chilli',id_konsumenta int,FOREIGN KEY(id_wykonawcy) REFERENCES postaci(id_postaci),FOREIGN KEY(id_konsumenta) REFERENCES postaci(id_postaci));
+
+zad 4.2
+INSERT INTO przetowry (id_wykonawcy, zawartosc, dodatek, id_konsumenta) values (1,'bilos',default,3);
+
+zad 5.1
+INSERT INTO postaci (nazwa,rodzaj,data_ur,wiek) values 
+('Olaf','wiking','1970-01-03',51),
+('Mjoll','wiking','1970-01-03',51),
+('Sven','wiking','1970-01-03',51),
+('Felix','wiking','1970-01-03',51),
+('Hrognar','wiking','1970-01-03',51);
+
+zad 5.2
+CREATE TABLE statek (nazwa varchar(20) PRIMARY KEY,rodzaj enum('kajak','tratwa'),data_wodowania date, max_ladownosc int unsigned);
+
+zad 5.3
+INSERT INTO statek (nazwa,rodzaj,data_wodowania,max_ladownosc) values 
+('grozny','kajak','1999-01-01',2),
+('szybki','tratwa','1999-01-01',5);
+
+zad 5.4
+ALTER TABLE postaci ADD COLUMN funkcja varchar(30);
+
+zad 5.5
+UPDATE postaci SET funkcja='kapitan' where nazwa='Bjorn';
+ALTER TABLE postaci ADD COLUMN statek varchar(20);
+
+zad 5.6
+ALTER TABLE postaci ADD FOREIGN KEY(statek) REFERENCES statek(nazwa) ON DELETE SET NULL;
+
+zad 5.7
+UPDATE postaci SET statek="grozny" where nazwa="Bjorn" OR nazwa="Drozd";
+UPDATE postaci SET statek="szybki" where statek is NULL AND rodzaj='wiking';
+
+zad 5.8
+DELETE FROM izba WHERE adres_budynku=12;
+
+zad 5.9
+DROP TABLE izba;

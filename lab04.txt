@@ -1,0 +1,37 @@
+zad 1 
+DELETE FROM postaci where nazwa='Sven' OR nazwa='Felix';
+ALTER TABLE walizka DROP FOREIGN KEY walizka_ibfk_1;
+ALTER TABLE przetowry DROP FOREIGN KEY przetowry_ibfk_1;
+ALTER TABLE przetowry DROP FOREIGN KEY przetowry_ibfk_2;
+ALTER TABLE postaci MODIFY id_postaci int;
+ALTER TABLE postaci DROP PRIMARY KEY;
+
+zad 2
+ALTER TABLE postaci ADD COLUMN pesel varchar(11);
+UPDATE postaci SET pesel='75849305847'+id_postaci;
+ALTER TABLE postaci ADD PRIMARY KEY(pesel);
+ALTER TABLE postaci MODIFY rodzaj enum('wiking','ptak','kobieta','syrena');
+INSERT INTO postaci values (9,'Gertruda_Nieszczera','syrena','1870-01-03',250,NULL,NULL,75849305856);
+
+zad 3
+UPDATE postaci SET statek='grozny' WHERE nazwa LIKE '%a%';
+UPDATE statek SET max_ladownosc=max_ladownosc*0.7 WHERE statek.data_wodowania BETWEEN '1901-01-01' AND '2000-12-31';
+ALTER TABLE postaci ADD CHECK (wiek<1000);
+
+zad 4
+ALTER TABLE postaci MODIFY rodzaj enum('wiking','ptak','kobieta','syrena','waz');
+INSERT INTO postaci values (10,'Loko','waz','1860-01-03',260,NULL,NULL,75849305867);
+CREATE TABLE marynarz SELECT * FROM postaci;
+lub
+CREATE TABLE marynarz LIKE postaci;
+INSERT INTO marynarz SELECT * FROM postaci WHERE statek is not NULL;
+ALTER TABLE marynarz ADD PRIMARY KEY(pesel);
+
+zad 5
+UPDATE postaci set statek=NULL;
+DELETE FROM postaci WHERE id_postaci=4;
+DELETE FROM statek;
+ALTER TABLE postaci DROP FOREIGN KEY postaci_ibfk_1;
+DROP TABLE statek;
+CREATE TABLE zwierz (id int PRIMARY KEY AUTO_INCREMENT,nazwa varchar(40),wiek int);
+INSERT INTO zwierz (nazwa,wiek) SELECT nazwa,wiek FROM postaci WHERE rodzaj="ptak";
